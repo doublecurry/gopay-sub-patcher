@@ -6,7 +6,7 @@ A small utility for assisting in recording subscription and billing redirect inf
 
 ## Project Content
 
-- `checkout-link-only.js`: A simplified version that only outputs key session information and the billing link.
+- `checkout-link-only.js`: outputs key session information and the billing link.
 
 - `gopay-long-link.js`: A version with process prompts for easy observation of requests and return results.
 
