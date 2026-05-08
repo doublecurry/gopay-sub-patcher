@@ -1,4 +1,4 @@
-# gopay-longlink-sub
+# gopay-sub-patcher
 
 A small utility for assisting in recording subscription and billing redirect information. It reads the necessary state from the currently logged-in session and attempts to generate a billing page address that can be opened in the browser, facilitating continued operation even when page redirection is unstable, the environment changes, or the process is interrupted.
 
