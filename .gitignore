@@ -1,20 +1,35 @@
+# Python bytecode
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 .Python
 
-# Python virtual environments
+# Isolated runtime sandboxes
 .venv/
 venv/
 env/
 
-# Runtime / debug output
+# Protocol state machines output
 runs/
+android_gopay_*/
+
+# Runtime captures and traces
+runtime_now/
+*.artifacts.json
+
+# Local ADB binary
+adb/
+
+# Ephemeral traces
 *.tmp
 *.log
 
-# IDE / OS
+# Secrets / environment
+.env
+*.key
+
+# Local tooling artifacts
 .idea/
 .vscode/
 .DS_Store
