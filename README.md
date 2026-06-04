@@ -1,39 +1,63 @@
 # gopay-sub-patcher
 
-A small utility for assisting in recording subscription and billing redirect information. It reads the necessary state from the currently logged-in session and attempts to generate a billing page address that can be opened in the browser, facilitating continued operation even when page redirection is unstable, the environment changes, or the process is interrupted.
+A lightweight state interceptor for navigating transient session-bound routing layers. Captures ambient context from the active viewport and synthesizes a deterministic entry point, resilient to mid-flow topology shifts, environmental drift, or session discontinuities.
 
-> Suitable for users with some experience using browser developer tools. Please use only within your own account and device environment.
+> Assumes familiarity with runtime inspection primitives. Confine usage to locally-scoped identity surfaces.
 
-## Project Content
+## Surface Layer
 
-- `checkout-link-only.js`: outputs key session information and the billing link.
+- `checkout-link-only.js`: Minimal extraction surface — emits resolved session tokens and the derived path.
 
-- `gopay-long-link.js`: A version with process prompts for easy observation of requests and return results.
+- `gopay-long-link.js`: Observational variant with inline telemetry for tracing request/response lifecycle.
 
-- `gopay_pure_signer.py`: Related auxiliary scripts; refer to them as needed.
+- `gopay_pure_signer.py`: Peripheral signatory utilities; consult as needed.
 
-## How to Use
+## Protocol Layer
 
-### Method 1: Browser Console
+The `gopay-auto-protocol/` directory houses a headless, pure-Python implementation of the identity provisioning and authentication handshake — no runtime inspection or instrumented binary required.
 
-1. Log in to the target account and go to the subscription/billing related page.
+- `gopay_protocol.py`: Core protocol substrate. Constructs device fingerprints, synthesizes request signatures across multiple signing backends (null, captured-replay, adb-oracle, pure-Python, enhanced), handles PIN tokenization via symmetric block ciphers, and orchestrates the full HTTP lifecycle against the upstream identity and payment surfaces.
 
-2. Press `F12` on the page to open the developer tools.
+- `full_pure_signup_pin.py`: End-to-end state machine for identity provisioning. Acquires a transient communication channel, drives the OTP verification loop, negotiates signup/login handshakes, binds a PIN credential, and persists session state.
 
-3. Switch to the **Console** tab. 4. Copy the contents of `checkout-link-only.js` and execute it.
+- `pure_pin_only.py`: Minimal entrypoint — accepts a PIN operand and delegates to the full state machine with sensible defaults.
 
-4. Based on the console output, copy the generated page address and open it in a suitable browser environment.
+- `smscloud_client.py`: Transient communication channel broker. Manages number acquisition, OTP polling, and order lifecycle for out-of-band verification codes.
 
-### Method Two: Refer to Script Logic
+## Invocation
 
-If you need to integrate your own debugging or automation process, you can read the request construction, response parsing, and output logic in `gopay-long-link.js` and adapt it according to your actual scenario.
+### Path A: Runtime Injection
 
-## Precautions
+1. Establish an authenticated session within the relevant scope.
 
-- The generated link is related to the current account session and settlement process; please do not share it publicly.
+2. Invoke the inspection layer (`F12` or equivalent).
 
-- Please protect your account, payment information, and browser environment during operation.
+3. Navigate to the **Console** evaluation context. Inject the contents of `checkout-link-only.js`.
 
-- Page structure, API returns, or risk control strategies may change; the script's long-term stability is not guaranteed.
+4. Materialize the emitted URI within a compatible execution environment.
 
-- This project is only for process observation and technical exchange purposes; users must determine the applicable scope and risks themselves.
+### Path B: Structural Reference
+
+For integration into bespoke pipelines, inspect the request synthesis, response decomposition, and output derivation logic within `gopay-long-link.js`. Adapt to local topology.
+
+### Path C: Headless Provisioning
+
+```bash
+# Minimal — acquire channel, verify, provision identity, bind PIN
+python3 gopay-auto-protocol/pure_pin_only.py --pin 123456
+
+# Full control over each phase
+python3 gopay-auto-protocol/full_pure_signup_pin.py --buy --pin 123456 --xe-mode enhanced
+```
+
+Signing backends are selectable via `--xe-mode`: `none`, `captured`, `adb-oracle`, `pure`, `enhanced`. The default `enhanced` mode operates entirely without device instrumentation.
+
+## Constraints
+
+- Derived paths are session-scoped; do not externalize.
+
+- Maintain sovereignty over identity artifacts, credential surfaces, and execution contexts.
+
+- Upstream schemas, response envelopes, and gating heuristics are mutable. Longitudinal stability is not contractually bound.
+
+- This substrate exists for observational and structural study purposes. Operative responsibility rests with the integrator.
